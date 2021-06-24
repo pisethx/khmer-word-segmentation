@@ -1,9 +1,13 @@
 <template>
   <div>
-    <header class="bg-gray-800 shadow">
-      <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <header class="bg-gray-800 shadow flex flex-col">
+      <div class="max-w-7xl mx-auto pt-6 px-4 sm:px-6 lg:px-8">
         <div class="flex justify-center items-center flex-col">
-          <h1 class="text-3xl font-bold text-white">Khmer Word Segmentation</h1>
+          <h1 class="text-3xl font-bold text-white">
+            Khmer
+            <span style="font-size: 40px; vertical-align: bottom">🇰🇭</span>
+            Word 💬 Segmentation
+          </h1>
           <div class="mt-3">
             <ListSelect
               label="Segmentation Method"
@@ -13,11 +17,25 @@
           </div>
         </div>
       </div>
+
+      <a
+        class="self-end px-6 py-3"
+        target="_blank"
+        href="https://github.com/pisethx/khmer-word-segmentation"
+      >
+        <div class="flex items-center text-white">
+          <CodeIcon class="h-6 w-6 mr-2" />
+          Github
+        </div>
+      </a>
     </header>
     <main>
       <div class="grid grid-cols-2 py-6 sm:px-6 lg:px-24 gap-8">
         <ContentEditable v-model="originalText" />
-        <ContentEditable :readonly="true" v-model="segmentedText" />
+        <ContentEditable
+          :readonly="true"
+          :modelValue="loading ? 'កំពុងដំណើរការ...' : segmentedText"
+        />
       </div>
     </main>
   </div>
@@ -29,20 +47,25 @@ import { ref, watch } from "vue";
 import ContentEditable from "./components/ContentEditable.vue";
 import ListSelect from "./components/ListSelect.vue";
 
+import { CodeIcon } from "@heroicons/vue/solid";
+
 export default {
   components: {
     ContentEditable,
     ListSelect,
+    CodeIcon,
   },
   setup() {
     const segmentationMethods = [
-      { id: "ICU", name: "ICU" },
+      { id: "ICU", name: "International Components for Unicode (ICU)" },
       { id: "SYMSPELL", name: "Symspell" },
+      { id: "CRF", name: "Conditional Random Field" },
     ];
     const selectedMethod = ref(segmentationMethods[0].id);
-    const originalText = ref("Hello");
-    const segmentedText = ref("Hello");
+    const originalText = ref("សូមបញ្ចូលអត្ថបទនៅទីនេះ...");
+    const segmentedText = ref("");
     const timeout = ref(null);
+    const loading = ref(false);
 
     const segment = (text, method) => {
       return fetch(
@@ -54,24 +77,30 @@ export default {
     };
 
     const onInputChange = async () => {
+      loading.value = true;
+
       const [res, err] = await segment(
         originalText.value,
         selectedMethod.value
       );
 
+      loading.value = false;
+
       if (err) return;
 
       const { segmented_text } = res.detail;
       segmentedText.value = segmented_text;
-      console.log(segmented_text.split(" "));
     };
 
     watch(
       () => originalText.value,
       () => {
+        loading.value = true;
+
         if (timeout) clearTimeout(timeout);
         timeout.value = setTimeout(onInputChange, 1000);
-      }
+      },
+      { immediate: true }
     );
 
     watch(() => selectedMethod.value, onInputChange);
@@ -81,6 +110,7 @@ export default {
       segmentationMethods,
       originalText,
       segmentedText,
+      loading,
     };
   },
 };

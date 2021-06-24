@@ -25,7 +25,7 @@
         "
       >
         <span class="flex items-center">
-          <span class="ml-3 block truncate">{{ selected.name }}</span>
+          <span class="ml-1 block truncate font-bold">{{ selected.name }}</span>
         </span>
         <span
           class="

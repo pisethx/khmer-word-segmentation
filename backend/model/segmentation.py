@@ -20,7 +20,6 @@ class Segmentation:
     @staticmethod
     def format_result(result: str):
         space = " "
-        seperator = space + space + space
         result = ("   ").join(
             list(
                 filter(

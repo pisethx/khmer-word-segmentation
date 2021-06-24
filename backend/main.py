@@ -12,10 +12,10 @@ from model.segmentation import Segmentation, ISegmentationMethod
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
- 
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,6 +34,10 @@ def get(text: str, method: ISegmentationMethod = ISegmentationMethod.CRF):
     return HTTPException(
         status_code=HTTP_200_OK,
         detail=(
-            {"method": method, "original_text": text, "segmented_text": segmented_text}
+            {
+                "method": method,
+                # "original_text": text,
+                "segmented_text": segmented_text,
+            }
         ),
     )

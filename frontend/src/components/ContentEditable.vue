@@ -16,7 +16,7 @@
       "
       @input="handleInput"
       @paste.prevent="onPaste"
-      style="line-height: 3; font-size: 24px"
+      style="line-height: 2.5; font-size: 20px"
     />
   </PageContent>
 </template>
