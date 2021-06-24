@@ -9,7 +9,7 @@ $ cd backend
 $ python3 install -r requirements.txt
 
 # Serve with hot reload at localhost:8000
-$ bash dev.sh
+$ bash script/dev.sh
 ```
 
 
