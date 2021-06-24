@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+symspellpy
+pyicu
+sklearn_crfsuite
+sklearn
+psutil
