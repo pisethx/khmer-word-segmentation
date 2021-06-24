@@ -6,7 +6,7 @@
       ref="contentEditable"
       class="
         p-4
-        lg:min-h-screen
+        md:min-h-screen
         focus:outline-none
         focus:ring-4
         focus:ring-offset-4

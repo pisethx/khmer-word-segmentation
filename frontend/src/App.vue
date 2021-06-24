@@ -4,9 +4,8 @@
       <div class="max-w-7xl mx-auto pt-6 px-4 sm:px-6 lg:px-8">
         <div class="flex justify-center items-center flex-col">
           <h1 class="text-3xl font-bold text-white">
-            Khmer
             <span style="font-size: 40px; vertical-align: bottom">🇰🇭</span>
-            Word 💬 Segmentation
+            Khmer Word Segmentation
           </h1>
           <div class="mt-3">
             <ListSelect
@@ -30,7 +29,7 @@
       </a>
     </header>
     <main>
-      <div class="grid grid-cols-2 py-6 sm:px-6 lg:px-24 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 py-6 sm:px-6 lg:px-24 gap-8">
         <ContentEditable v-model="originalText" />
         <ContentEditable
           :readonly="true"
