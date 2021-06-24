@@ -4,6 +4,7 @@
 ```bash
 # Go to directory
 $ cd backend
+
 # Install Depedencies
 $ python3 install -r requirements.txt
 
@@ -16,6 +17,7 @@ $ bash dev.sh
 ```bash
 # Go to directory
 $ cd frontend
+
 # Install Depedencies
 $ npm install
 
