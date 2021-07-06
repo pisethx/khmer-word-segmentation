@@ -23,7 +23,7 @@ app.add_middleware(
 
 
 @app.get("/khmer-word-segmentation")
-def get(text: str, method: ISegmentationMethod = ISegmentationMethod.CRF):
+def get(text: str, method: ISegmentationMethod = ISegmentationMethod.RNN):
     if not text or not method:
         return HTTPException(
             status_code=HTTP_422_UNPROCESSABLE_ENTITY, detail="Invalid text or method."
@@ -36,8 +36,8 @@ def get(text: str, method: ISegmentationMethod = ISegmentationMethod.CRF):
         detail=(
             {
                 "method": method,
-                # "original_text": text,
                 "segmented_text": segmented_text,
+                # "original_text": text,
             }
         ),
     )

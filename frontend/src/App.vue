@@ -59,6 +59,7 @@ export default {
       { id: "ICU", name: "International Components for Unicode (ICU)" },
       { id: "SYMSPELL", name: "Symspell" },
       { id: "CRF", name: "Conditional Random Field" },
+      { id: "RNN", name: "Recurrent Neural Network" },
     ];
     const selectedMethod = ref(segmentationMethods[0].id);
     const originalText = ref("សូមបញ្ចូលអត្ថបទនៅទីនេះ...");
@@ -85,10 +86,13 @@ export default {
 
       loading.value = false;
 
-      if (err) return;
+      if (err) {
+        segmentedText.value = "ប្រព័ន្ធដំណើរការ​មិន​ប្រក្រតី។";
+        return;
+      }
 
       const { segmented_text } = res.detail;
-      segmentedText.value = segmented_text;
+      segmentedText.value = segmented_text ?? "";
     };
 
     watch(
@@ -96,7 +100,7 @@ export default {
       () => {
         loading.value = true;
 
-        if (timeout) clearTimeout(timeout);
+        if (timeout.value) clearTimeout(timeout.value);
         timeout.value = setTimeout(onInputChange, 1000);
       },
       { immediate: true }

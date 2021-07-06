@@ -1,8 +1,9 @@
 from enum import Enum
 import re
-import util.crf as CRF
 import util.icu as ICU
 import util.symspell as SYMSPELL
+import util.crf as CRF
+import util.rnn as RNN
 
 
 class ISegmentationMethod(Enum):
@@ -47,6 +48,8 @@ class Segmentation:
             result = SYMSPELL.segment(text)
         elif self.method == ISegmentationMethod.CRF:
             result = CRF.segment(text)
+        elif self.method == ISegmentationMethod.RNN:
+            result = RNN.segment(text)
 
         return Segmentation.format_result(result)
 

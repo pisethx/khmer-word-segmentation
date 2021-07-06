@@ -5,3 +5,5 @@ pyicu
 sklearn_crfsuite
 sklearn
 psutil
+torch
+numpy
