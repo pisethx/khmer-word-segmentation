@@ -9,29 +9,22 @@ import numpy as np
 
 from util.helper import seg_char, pad_input, one_hot_encode
 
-from util.constants import (
-    KHCONST,
-    KHVOWEL,
-    KHSUB,
-    KHDIAC,
-    KHSYM,
-    KHNUMBER,
-)
 
 TRAIN_FILE = "util/rnn_train_dataset.txt"
 MODEL_FILE = "util/rnn.model"
 
+KHCONST = list(u"កខគឃងចឆជឈញដឋឌឍណតថទធនបផពភមយរលវឝឞសហឡអឣឤឥឦឧឨឩឪឫឬឭឮឯឰឱឲឳ")
+KHVOWEL = list(u"឴឵ាិីឹឺុូួើឿៀេែៃោៅ\u17c6\u17c7\u17c8")
+# subscript, diacritics
+KHSUB = list(u"្")
+KHDIAC = list(
+    u"\u17c9\u17ca\u17cb\u17cc\u17cd\u17ce\u17cf\u17d0"
+)  # MUUSIKATOAN, TRIISAP, BANTOC,ROBAT,
+KHSYM = list("៕។៛ៗ៚៙៘,.? ")  # add space
+KHNUMBER = list(u"០១២៣៤៥៦៧៨៩0123456789")  # remove 0123456789
 
-CHARS = (
-    ["PADDING"]
-    + ["UNK"]
-    + list(KHCONST)
-    + list(KHVOWEL)
-    + list(KHSUB)
-    + list(KHDIAC)
-    + list(KHSYM)
-    + list(KHNUMBER)
-)
+CHARS = ["PADDING"] + ["UNK"] + KHCONST + KHVOWEL + KHSUB + KHDIAC + KHSYM + KHNUMBER
+
 
 chars2idx = {o: i for i, o in enumerate(CHARS)}
 idx2chars = {i: o for i, o in enumerate(CHARS)}
@@ -39,11 +32,11 @@ idx2chars = {i: o for i, o in enumerate(CHARS)}
 train_on_gpu = torch.cuda.is_available()
 
 
-
 def cleanup_str(str):
     str_ = str.replace("~", "")
     str_ = str_.replace("^", "")
     str_ = str_.replace("_", "")
+
     return str_
 
 
@@ -137,7 +130,7 @@ class WordSegmentRNN(nn.Module):
 
 
 def train(
-    net, train_dl, test_dl, seq_length=300, epochs=10, lr=0.001, clip=5, print_every=10
+    net, train_dl, test_dl, seq_length=300, epochs=10, lr=0.01, clip=1, print_every=10
 ):
     """Training a network
 
@@ -247,7 +240,7 @@ def train_model():
     X_train, X_test, y_train, y_test = split_data(
         chars_only, labels_only, chars2idx, sentence_length=300
     )
- 
+
     batch_size = 64
     # create your datset
     train_dataset = TensorDataset(
@@ -271,17 +264,22 @@ def train_model():
 
 
 def segment(str):
-
     if not os.path.exists(MODEL_FILE):
-        print('Train on', 'gpu' if train_on_gpu else 'cpu')
+        print("Train on", "gpu" if train_on_gpu else "cpu")
         model = train_model()
         torch.save(model, MODEL_FILE)
     else:
         model = torch.load(MODEL_FILE)
-        model.eval()
 
-    chars = list(str)
-    index_of_chars = [chars2idx[x] for x in chars]
+    model.eval()
+
+    list_of_chars = list(str)
+    print(CHARS)
+    print(list_of_chars)
+
+    index_of_chars = [(chars2idx[x] if (x in CHARS) else 1) for x in list_of_chars]
+    print(index_of_chars)
+
     tensor_chars = torch.from_numpy(np.array(index_of_chars)).unsqueeze(0)
     encoded_chars = one_hot_encode(tensor_chars, len(CHARS))
 
@@ -289,8 +287,8 @@ def segment(str):
         encoded_chars = encoded_chars.cuda()
 
     h = model.init_hidden(1)
-
     h = tuple([each.data for each in h])
+
     outputs, _ = model(encoded_chars, h)
 
     if train_on_gpu:
@@ -298,10 +296,14 @@ def segment(str):
     else:
         outputs = outputs.detach().numpy()
 
-    idx = np.argmax(outputs, axis=1)
+    segmented_chars_idx = np.argmax(outputs, axis=1)
+
     result = ""
 
-    for i, c in enumerate(chars):
-        result += c if (idx[i] != 1 or result == "") else (" " + c)
+    for idx, char in enumerate(list_of_chars):
+        if segmented_chars_idx[idx] == 1 and result != "":
+            result += " " + char
+        else:
+            result += char
 
     return result
