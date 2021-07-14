@@ -61,7 +61,7 @@ export default {
       { id: "CRF", name: "Conditional Random Field" },
       { id: "RNN", name: "Recurrent Neural Network" },
     ];
-    const selectedMethod = ref(segmentationMethods[3].id);
+    const selectedMethod = ref(segmentationMethods[0].id);
     const originalText = ref("សូមបញ្ចូលអត្ថបទនៅទីនេះ...");
     const segmentedText = ref("");
     const timeout = ref(null);

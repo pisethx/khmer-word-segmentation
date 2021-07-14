@@ -273,12 +273,9 @@ def segment(str):
 
     model.eval()
 
-    list_of_chars = list(str)
-    print(CHARS)
-    print(list_of_chars)
+    list_of_chars = list(str) 
 
     index_of_chars = [(chars2idx[x] if (x in CHARS) else 1) for x in list_of_chars]
-    print(index_of_chars)
 
     tensor_chars = torch.from_numpy(np.array(index_of_chars)).unsqueeze(0)
     encoded_chars = one_hot_encode(tensor_chars, len(CHARS))
