@@ -14,14 +14,17 @@ class ISegmentationMethod(Enum):
 
 
 class Segmentation:
-    def __init__(self, original_text: str, method: ISegmentationMethod):
+    def __init__(
+        self, original_text: str, method: ISegmentationMethod, separator="   "
+    ):
         self.original_text = original_text
         self.method = method
+        self.separator = separator
 
     @staticmethod
-    def format_result(result: str):
+    def format_result(result: str, separator: str):
         space = " "
-        result = ("   ").join(
+        result = (separator).join(
             list(
                 filter(
                     lambda x: x != "",
@@ -36,7 +39,7 @@ class Segmentation:
 
         return result
 
-    def segment(self):
+    def segment(self, separator="   "):
         if not self.original_text or not isinstance(self.original_text, str):
             return []
 
@@ -51,14 +54,4 @@ class Segmentation:
         elif self.method == ISegmentationMethod.RNN:
             result = RNN.segment(text)
 
-        return Segmentation.format_result(result)
-
-        # result = (
-        #     "ICU : {}\n".format(Segmentation.format_result(ICU.segment(text)))
-        #     + "SYMSPELL : {}\n".format(
-        #         Segmentation.format_result(SYMSPELL.segment(text))
-        #     )
-        #     + "CRF : {}\n".format(Segmentation.format_result(CRF.segment(text)))
-        # )
-
-        # return result
+        return Segmentation.format_result(result, separator)

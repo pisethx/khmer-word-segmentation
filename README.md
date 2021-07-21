@@ -1,5 +1,7 @@
 # Khmer Word Segmentation
 
+### [Google Slides](https://docs.google.com/presentation/d/1qOmxlgjcBggzeq_oM4ayHU6aFti8jx9NDd68lRbK5gQ/edit?ts=60eec119#slide=id.ge50f165cca_0_0)
+
 ### Resource
 - [ICU](https://github.com/danhhong/khmer_segment/blob/main/khmer_segment_icu.py)
 - [Symspell](https://symspellpy.readthedocs.io/en/latest/examples/index.html)

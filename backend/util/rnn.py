@@ -32,10 +32,10 @@ idx2chars = {i: o for i, o in enumerate(CHARS)}
 train_on_gpu = torch.cuda.is_available()
 
 
-def cleanup_str(str):
-    str_ = str.replace("~", "")
-    str_ = str_.replace("^", "")
-    str_ = str_.replace("_", "")
+def cleanup_str(str, separator =""):
+    str_ = str.replace("~", separator)
+    str_ = str_.replace("^", separator)
+    str_ = str_.replace("_", separator)
 
     return str_
 
@@ -277,6 +277,8 @@ def segment(str):
 
     index_of_chars = [(chars2idx[x] if (x in CHARS) else 1) for x in list_of_chars]
 
+    # print(index_of_chars)
+
     tensor_chars = torch.from_numpy(np.array(index_of_chars)).unsqueeze(0)
     encoded_chars = one_hot_encode(tensor_chars, len(CHARS))
 
@@ -293,6 +295,8 @@ def segment(str):
     else:
         outputs = outputs.detach().numpy()
 
+
+    print(outputs)
     segmented_chars_idx = np.argmax(outputs, axis=1)
 
     result = ""
